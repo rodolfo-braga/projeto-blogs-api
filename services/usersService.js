@@ -24,8 +24,17 @@ const getUsers = async () => {
   return users;
 };
 
+const getById = async (id) => {
+  const user = await User.findByPk(id);
+
+  if (!user) return { error: { code: 'notFound', message: 'User does not exist' } };
+
+  return user;
+};
+
 module.exports = {
   create,
   findByEmailAndPassword,
   getUsers,
+  getById,
 };
