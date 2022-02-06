@@ -18,7 +18,14 @@ const findByEmailAndPassword = async (email, password) => {
   return user;
 };
 
+const getUsers = async () => {
+  const users = await User.findAll();
+
+  return users;
+};
+
 module.exports = {
   create,
   findByEmailAndPassword,
+  getUsers,
 };
