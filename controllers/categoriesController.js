@@ -15,4 +15,10 @@ categories.post('/', validateJWT, rescue(async (req, res, next) => {
   return res.status(201).json(newCategory);
 }));
 
+categories.get('/', validateJWT, rescue(async (req, res) => {
+  const allCategories = await categoriesService.getCategories();
+
+  return res.status(200).json(allCategories);
+}));
+
 module.exports = categories;
