@@ -5,6 +5,7 @@ module.exports = (err, req, res, _next) => {
   }
 
   const statusByErrorCode = {
+    badRequest: 400,
     notFound: 404,
     conflict: 409,
   };

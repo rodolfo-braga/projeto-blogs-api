@@ -10,6 +10,15 @@ const create = async (userInfo) => {
   return newUser.dataValues;
 };
 
+const findByEmailAndPassword = async (email, password) => {
+  const user = await User.findOne({ where: { email, password }, raw: true });
+
+  if (!user) return { error: { code: 'badRequest', message: 'Invalid fields' } };
+
+  return user;
+};
+
 module.exports = {
   create,
+  findByEmailAndPassword,
 };
