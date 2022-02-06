@@ -23,6 +23,14 @@ users.post('/', rescue(async (req, res, next) => {
   return res.status(201).json({ token });
 }));
 
+users.get('/:id', validateJWT, rescue(async (req, res, next) => {
+  const user = await usersService.getById(req.params.id);
+  console.log(user);
+  if (user.error) return next(user.error);
+
+  return res.status(200).json(user);
+}));
+
 users.get('/', validateJWT, rescue(async (req, res) => {
   const allUsers = await usersService.getUsers();
 
