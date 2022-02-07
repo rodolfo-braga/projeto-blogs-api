@@ -22,9 +22,18 @@ const postSchema = Joi.object({
   categoryIds: Joi.array().not().empty().required(),
 });
 
+const updatePostSchema = Joi.object({
+  title: Joi.string().required(),
+  content: Joi.string().required(),
+  categoryIds: Joi.any().forbidden().messages({
+    'any.unknown': 'Categories cannot be edited',
+  }),
+});
+
 module.exports = {
   userSchema,
   loginSchema,
   categorySchema,
   postSchema,
+  updatePostSchema,
 };
