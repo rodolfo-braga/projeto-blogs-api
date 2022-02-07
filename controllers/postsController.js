@@ -15,4 +15,10 @@ posts.post('/', validateJWT, rescue(async (req, res, next) => {
   return res.status(201).json(newPost);
 }));
 
+posts.get('/', validateJWT, rescue(async (req, res) => {
+  const allPosts = await postsService.getPosts();
+
+  return res.status(200).json(allPosts);
+}));
+
 module.exports = posts;
