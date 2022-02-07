@@ -3,7 +3,7 @@ const rescue = require('express-rescue');
 const validateJWT = require('../auth/validateJWT');
 
 const postsService = require('../services/postsService');
-const { postSchema } = require('../validation/schemas');
+const { postSchema, updatePostSchema } = require('../validation/schemas');
 
 posts.post('/', validateJWT, rescue(async (req, res, next) => {
   const { error } = postSchema.validate(req.body);
@@ -27,6 +27,18 @@ posts.get('/', validateJWT, rescue(async (req, res) => {
   const allPosts = await postsService.getPosts();
 
   return res.status(200).json(allPosts);
+}));
+
+posts.put('/:id', validateJWT, rescue(async (req, res, next) => {
+  const { error } = updatePostSchema.validate(req.body);
+  if (error) return next(error);
+
+  const { params: { id }, body: post, user } = req;
+  
+  const updatedPost = await postsService.update(id, post, user);
+  if (updatedPost.error) return next(updatedPost.error);
+
+  return res.status(200).json(updatedPost);
 }));
 
 module.exports = posts;
