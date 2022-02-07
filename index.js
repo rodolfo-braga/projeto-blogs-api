@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const usersController = require('./controllers/usersController');
 const loginController = require('./controllers/loginController');
 const categoriesController = require('./controllers/categoriesController');
+const postsController = require('./controllers/postsController');
 const errorMiddleware = require('./middlewares/error');
 
 app.use(bodyParser.json());
@@ -22,5 +23,7 @@ app.use('/user', usersController);
 app.use('/login', loginController);
 
 app.use('/categories', categoriesController);
+
+app.use('/post', postsController);
 
 app.use(errorMiddleware);
