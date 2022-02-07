@@ -15,6 +15,14 @@ posts.post('/', validateJWT, rescue(async (req, res, next) => {
   return res.status(201).json(newPost);
 }));
 
+posts.get('/:id', validateJWT, rescue(async (req, res, next) => {
+  const post = await postsService.getById(req.params.id);
+
+  if (post.error) return next(post.error);
+
+  return res.status(200).json(post);
+}));
+
 posts.get('/', validateJWT, rescue(async (req, res) => {
   const allPosts = await postsService.getPosts();
 
