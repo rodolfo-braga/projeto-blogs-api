@@ -64,9 +64,22 @@ const update = async (id, post, user) => {
   return updatedPost;
 };
 
+const remove = async (id, user) => {
+  const postToBeDeleted = await BlogPost.findOne({ where: { id } });
+
+  if (!postToBeDeleted) return { error: { code: 'notFound', message: 'Post does not exist' } };
+
+  if (postToBeDeleted.userId !== user.id) {
+    return { error: { code: 'unauthorized', message: 'Unauthorized user' } };
+  }
+
+  return BlogPost.destroy({ where: { id } });
+};
+
 module.exports = {
   create,
   getPosts,
   getById,
   update,
+  remove,
 };
