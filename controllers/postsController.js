@@ -41,4 +41,13 @@ posts.put('/:id', validateJWT, rescue(async (req, res, next) => {
   return res.status(200).json(updatedPost);
 }));
 
+posts.delete('/:id', validateJWT, rescue(async (req, res, next) => {
+  const { params: { id }, user } = req;
+  
+  const deletedPost = await postsService.remove(id, user);
+  if (deletedPost.error) return next(deletedPost.error);
+
+  return res.status(204).end();
+}));
+
 module.exports = posts;
