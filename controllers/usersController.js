@@ -37,4 +37,10 @@ users.get('/', validateJWT, rescue(async (req, res) => {
   return res.status(200).json(allUsers);
 }));
 
+users.delete('/me', validateJWT, rescue(async (req, res) => {
+  await usersService.remove(req.user.id);
+
+  return res.status(204).end();
+}));
+
 module.exports = users;
