@@ -15,6 +15,13 @@ posts.post('/', validateJWT, rescue(async (req, res, next) => {
   return res.status(201).json(newPost);
 }));
 
+posts.get('/search', validateJWT, rescue(async (req, res) => {
+  const { q: searchTerm } = req.query;
+  const postsFiltered = await postsService.getPosts(searchTerm);
+
+  return res.status(200).json(postsFiltered);
+}));
+
 posts.get('/:id', validateJWT, rescue(async (req, res, next) => {
   const post = await postsService.getById(req.params.id);
 
