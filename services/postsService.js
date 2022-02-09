@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { BlogPost, PostCategory, Category, User } = require('../models');
 
 const create = async (post, user) => {
@@ -13,7 +14,7 @@ const create = async (post, user) => {
   };
 
   const postCreated = await BlogPost.create(postInfo);
-  
+
   post.categoryIds.forEach(async (id) => PostCategory.create({
     postId: postCreated.id,
     categoryId: id,
@@ -27,7 +28,22 @@ const create = async (post, user) => {
   return newPost;
 };
 
-const getPosts = async () => {
+const getPosts = async (searchTerm) => {
+  if (searchTerm) {
+    const postsFiltered = await BlogPost.findAll({
+      where: {
+        [Op.or]: [
+          { title: { [Op.substring]: searchTerm } },
+          { content: { [Op.substring]: searchTerm } },
+        ],
+      },
+      include: [{ model: User, as: 'user' },
+      { model: Category, as: 'categories', through: { attributes: [] } }],
+    });
+
+    return postsFiltered;
+  }
+
   const posts = await BlogPost.findAll({
     include: [{ model: User, as: 'user' }, { model: Category, as: 'categories' }],
   });
@@ -55,7 +71,7 @@ const update = async (id, post, user) => {
 
   await BlogPost.update(post, { where: { id } });
 
-  const updatedPost = await BlogPost.findOne({ 
+  const updatedPost = await BlogPost.findOne({
     where: { id },
     attributes: { exclude: ['id', 'published', 'updated'] },
     include: { model: Category, as: 'categories', through: { attributes: [] } },
